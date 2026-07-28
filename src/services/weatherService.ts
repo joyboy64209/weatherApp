@@ -47,6 +47,7 @@ export async function getWeatherData(
     weatherCode: weatherResponse.daily.weather_code,
     sunrise: weatherResponse.daily.sunrise,
     sunset: weatherResponse.daily.sunset,
+    precipitationProbabilityMax: weatherResponse.daily.precipitation_probability_max,
   };
 
   return {

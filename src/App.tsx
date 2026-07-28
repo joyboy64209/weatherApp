@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MainLayout } from '@/layouts/MainLayout';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useTheme } from '@/hooks/useTheme';
+import { useWindowSizePersistence } from '@/hooks/useWindowSize';
 import { WeatherSkeleton } from '@/components/ui/Skeleton';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })));
@@ -22,6 +23,7 @@ const queryClient = new QueryClient({
 function AppContent() {
   const { load: loadSettings } = useSettingsStore();
   useTheme();
+  useWindowSizePersistence();
 
   useEffect(() => {
     loadSettings();

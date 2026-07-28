@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { WeatherData } from '@/types/weather';
 import { WeatherIcon } from './WeatherIcon';
 import { formatTemperature } from '@/utils/temperature';
-import { formatWindSpeed } from '@/utils/windSpeed';
+import { formatWindSpeed, getWindDirection } from '@/utils/windSpeed';
 import { formatTime, getCurrentTimeFormatted } from '@/utils/timeFormatter';
 import { getWeatherCodeInfo } from '@/constants/weatherCodes';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -35,7 +35,7 @@ export function CurrentWeather({ data }: CurrentWeatherProps) {
     },
     {
       label: 'Wind',
-      value: formatWindSpeed(data.current.windSpeed, windUnit),
+      value: `${formatWindSpeed(data.current.windSpeed, windUnit)} ${getWindDirection(data.current.windDirection)}`,
       icon: Wind,
     },
     {

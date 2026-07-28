@@ -20,6 +20,7 @@ export function DailyForecast({ data }: DailyForecastProps) {
     code: data.weatherCode[i],
     sunrise: data.sunrise[i],
     sunset: data.sunset[i],
+    rainChance: data.precipitationProbabilityMax?.[i] ?? 0,
   }));
 
   return (
@@ -49,13 +50,19 @@ export function DailyForecast({ data }: DailyForecastProps) {
               sunrise={day.sunrise}
               sunset={day.sunset}
             />
-            <div className="flex items-center gap-3 text-sm">
-              <span className="font-semibold text-white">
-                {formatTemperatureShort(day.high, tempUnit)}
-              </span>
-              <span className="text-white/50">
-                {formatTemperatureShort(day.low, tempUnit)}
-              </span>
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-1 text-blue-300">
+                <Droplets className="h-3 w-3" />
+                <span>{day.rainChance}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-white">
+                  {formatTemperatureShort(day.high, tempUnit)}
+                </span>
+                <span className="text-white/50">
+                  {formatTemperatureShort(day.low, tempUnit)}
+                </span>
+              </div>
             </div>
           </motion.div>
         ))}

@@ -27,6 +27,7 @@ export interface WeatherApiResponse {
     weather_code: number[];
     sunrise: string[];
     sunset: string[];
+    precipitation_probability_max?: number[];
   };
 }
 
@@ -61,6 +62,7 @@ export async function fetchWeatherData(
         'weather_code',
         'sunrise',
         'sunset',
+        'precipitation_probability_max',
       ].join(','),
       timezone: 'auto',
       forecast_days: 7,

@@ -26,6 +26,7 @@ export interface DailyForecast {
   weatherCode: number[];
   sunrise: string[];
   sunset: string[];
+  precipitationProbabilityMax?: number[];
 }
 
 export interface WeatherData {

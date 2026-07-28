@@ -48,6 +48,12 @@ export const useSearchStore = create<SearchState>((set, get) => ({
     set({ recentSearches: updated });
   },
 
+  getCityName: (entry: string) => entry.split('|')[0],
+  getCityData: (entry: string) => {
+    const parts = entry.split('|');
+    return { name: parts[0], lat: parts[1], lon: parts[2], country: parts[3] || '' };
+  },
+
   clearRecentSearches: () => {
     saveRecentSearches([]);
     set({ recentSearches: [] });
