@@ -208,7 +208,7 @@ export function HomePage() {
       <div className="space-y-6 p-4">
         {offlineData && (
           <div className="rounded-xl bg-yellow-500/20 p-3 text-center text-sm text-yellow-300 backdrop-blur-sm">
-            Showing cached data — you are offline
+            🛑 Offline Mode — Showing cached data
           </div>
         )}
 
