@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Settings, Home } from 'lucide-react';
 import { SearchBar } from '@/components/search/SearchBar';
 import { GeocodingResult } from '@/types/geocoding';

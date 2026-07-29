@@ -7,7 +7,7 @@ import { Sun, Moon, Monitor, Thermometer, Wind, MapPin, RefreshCw, Database } fr
 
 export function SettingsPage() {
   const { settings, setTemperatureUnit, setWindSpeedUnit, setAutoLocation, setRefreshInterval, setCacheDuration } = useSettingsStore();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   const themeOptions: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
     { value: 'light', label: 'Light', icon: Sun },

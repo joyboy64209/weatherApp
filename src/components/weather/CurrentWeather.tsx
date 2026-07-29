@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { WeatherData } from '@/types/weather';
-import { WeatherIcon } from './WeatherIcon';
 import { formatTemperature } from '@/utils/temperature';
 import { formatWindSpeed, getWindDirection } from '@/utils/windSpeed';
 import { formatTime, getCurrentTimeFormatted } from '@/utils/timeFormatter';

@@ -21,10 +21,10 @@ function createClient(baseURL: string): AxiosInstance {
         return Promise.reject(error);
       }
 
-      config._retryCount = (config._retryCount || 0) + 1;
+      const retryCount = (config._retryCount || 0) + 1;
 
-      if (config._retryCount <= MAX_RETRIES && !isClientError(error)) {
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * config._retryCount));
+      if (retryCount <= MAX_RETRIES && !isClientError(error)) {
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * retryCount));
         return client(config as never);
       }
 
