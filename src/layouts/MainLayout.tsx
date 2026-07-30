@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { GeocodingResult } from '@/types/geocoding';
@@ -11,6 +11,7 @@ import { DEBOUNCE_DELAY } from '@/constants/defaults';
 
 export function MainLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const debouncedQuery = useDebounce(query, DEBOUNCE_DELAY);
@@ -61,9 +62,9 @@ export function MainLayout() {
       <div className="ml-64 flex-1">
         <OfflineBanner />
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-glass-stroke bg-transparent px-container-padding py-4 backdrop-blur-[20px]">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-glass-stroke bg-surface/80 px-container-padding py-4 backdrop-blur-[20px]">
           <div ref={containerRef} className="relative flex-grow max-w-md">
-            <div className="flex items-center rounded-full border border-glass-stroke bg-glass-fill px-6 py-2.5 transition-all duration-300 focus-within:border-white/25 focus-within:shadow-lg focus-within:shadow-primary/5 focus-within:backdrop-blur-[40px]">
+            <div className="flex items-center rounded-full border border-glass-stroke bg-surface/80 px-6 py-2.5 transition-all duration-300 hover:bg-surface/90 focus-within:border-primary/40 focus-within:bg-surface/95 focus-within:shadow-lg focus-within:shadow-primary/5 focus-within:backdrop-blur-[40px]">
               <Search className="mr-3 h-5 w-5 text-on-surface-variant" />
               <input
                 type="text"
@@ -77,7 +78,7 @@ export function MainLayout() {
             </div>
             {/* Autocomplete Dropdown */}
             {isOpen && (
-              <div className="bg-surface/95 glass-card absolute left-0 top-full mt-2 w-full overflow-hidden rounded-2xl shadow-2xl backdrop-blur-xl">
+              <div className="custom-scrollbar absolute left-0 top-full mt-2 max-h-[400px] w-full overflow-y-auto overflow-x-hidden rounded-2xl border border-glass-stroke bg-surface/95 shadow-2xl backdrop-blur-xl">
                 <div className="p-2">
                   {isSearching ? (
                     <div className="px-4 py-3 text-center text-label-md text-on-surface-variant">Searching...</div>
@@ -121,9 +122,9 @@ export function MainLayout() {
             </div>
           </div>
         </header>
-        {/* Main Content */}
+        {/* Main Content - key forces re-mount on route change */}
         <main className="mx-auto max-w-[1400px] p-container-padding">
-          <Outlet />
+          <Outlet key={location.pathname} />
         </main>
       </div>
     </div>

@@ -150,6 +150,7 @@ export function AirQualityPage() {
         </div>
 
         {/* Pollutant Cards */}
+        <div className="col-span-12 grid grid-cols-1 gap-card-gap sm:grid-cols-2 lg:grid-cols-3">
         {pollutants.map((p, i) => (
           <motion.div
             key={p.key}
@@ -172,6 +173,7 @@ export function AirQualityPage() {
             </div>
           </motion.div>
         ))}
+        </div>
 
         {/* Map */}
         <div className="col-span-12 relative h-[400px] overflow-hidden rounded-[2.5rem] glass-panel transition-colors group">
