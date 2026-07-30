@@ -40,7 +40,19 @@ export function formatDate(dateString: string): string {
 }
 
 export function isNightTime(sunrise: string, sunset: string, checkTime?: string): boolean {
-  const now = checkTime ? new Date(checkTime) : new Date();
+  if (checkTime) {
+    // Compare only time-of-day (ignore date) so hourly forecast across days works correctly
+    const checkDate = new Date(checkTime);
+    const riseDate = new Date(sunrise);
+    const setDate = new Date(sunset);
+
+    const checkMinutes = checkDate.getHours() * 60 + checkDate.getMinutes();
+    const riseMinutes = riseDate.getHours() * 60 + riseDate.getMinutes();
+    const setMinutes = setDate.getHours() * 60 + setDate.getMinutes();
+
+    return checkMinutes < riseMinutes || checkMinutes > setMinutes;
+  }
+  const now = new Date();
   const sunriseTime = new Date(sunrise);
   const sunsetTime = new Date(sunset);
   return now < sunriseTime || now > sunsetTime;

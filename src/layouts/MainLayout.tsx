@@ -77,7 +77,7 @@ export function MainLayout() {
             </div>
             {/* Autocomplete Dropdown */}
             {isOpen && (
-              <div className="glass-card absolute left-0 top-full mt-2 w-full overflow-hidden rounded-2xl shadow-2xl">
+              <div className="bg-surface/95 glass-card absolute left-0 top-full mt-2 w-full overflow-hidden rounded-2xl shadow-2xl backdrop-blur-xl">
                 <div className="p-2">
                   {isSearching ? (
                     <div className="px-4 py-3 text-center text-label-md text-on-surface-variant">Searching...</div>
