@@ -8,6 +8,7 @@ interface WeatherIconProps {
   className?: string;
   sunrise?: string;
   sunset?: string;
+  time?: string;
 }
 
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
@@ -23,8 +24,8 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   CloudLightning,
 };
 
-export function WeatherIcon({ weatherCode, size = 24, className = '', sunrise, sunset }: WeatherIconProps) {
-  const isNight = sunrise && sunset ? isNightTime(sunrise, sunset) : false;
+export function WeatherIcon({ weatherCode, size = 24, className = '', sunrise, sunset, time }: WeatherIconProps) {
+  const isNight = sunrise && sunset ? isNightTime(sunrise, sunset, time) : false;
   const info = getWeatherCodeInfo(weatherCode, isNight);
   const IconComponent = iconMap[info.icon] || Cloud;
 

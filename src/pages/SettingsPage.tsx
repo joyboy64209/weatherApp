@@ -1,9 +1,8 @@
-import { motion } from 'framer-motion';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useTheme } from '@/hooks/useTheme';
 import { REFRESH_INTERVALS, CACHE_DURATIONS } from '@/constants/defaults';
 import { TemperatureUnit, WindSpeedUnit, ThemeMode } from '@/types/settings';
-import { Sun, Moon, Monitor, Thermometer, Wind, MapPin, RefreshCw, Database } from 'lucide-react';
+import { Sun, Moon, Monitor, RefreshCw, Database, Ruler, Palette, Gauge } from 'lucide-react';
 
 export function SettingsPage() {
   const { settings, setTemperatureUnit, setWindSpeedUnit, setAutoLocation, setRefreshInterval, setCacheDuration } = useSettingsStore();
@@ -16,8 +15,8 @@ export function SettingsPage() {
   ];
 
   const tempOptions: { value: TemperatureUnit; label: string }[] = [
-    { value: 'celsius', label: 'Celsius (°C)' },
-    { value: 'fahrenheit', label: 'Fahrenheit (°F)' },
+    { value: 'celsius', label: 'Celsius' },
+    { value: 'fahrenheit', label: 'Fahrenheit' },
   ];
 
   const windOptions: { value: WindSpeedUnit; label: string }[] = [
@@ -26,194 +25,174 @@ export function SettingsPage() {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mx-auto max-w-2xl space-y-8 p-4"
-    >
-      <h1 className="text-2xl font-bold text-white">Settings</h1>
-
-      {/* Theme */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <Monitor className="h-4 w-4" />
-          Theme
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          {themeOptions.map((option) => {
-            const Icon = option.icon;
-            const isActive = settings.theme === option.value;
-            return (
-              <motion.button
-                key={option.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setTheme(option.value)}
-                className={`flex flex-col items-center gap-2 rounded-xl p-4 transition-colors ${
-                  isActive
-                    ? 'bg-white/20 text-white ring-2 ring-white/30'
-                    : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white'
-                }`}
-                aria-label={`${option.label} theme`}
-                aria-pressed={isActive}
-              >
-                <Icon className="h-6 w-6" />
-                <span className="text-sm">{option.label}</span>
-              </motion.button>
-            );
-          })}
+    <div className="mx-auto max-w-4xl space-y-10 py-12">
+      {/* Section: Units */}
+      <section className="space-y-4">
+        <div className="mb-2 flex items-center gap-2">
+          <Ruler className="h-6 w-6 text-primary" />
+          <h3 className="font-headline-md text-headline-md text-on-surface">Measurement Units</h3>
         </div>
-      </section>
-
-      {/* Temperature Unit */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <Thermometer className="h-4 w-4" />
-          Temperature
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          {tempOptions.map((option) => {
-            const isActive = settings.temperatureUnit === option.value;
-            return (
-              <motion.button
-                key={option.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setTemperatureUnit(option.value)}
-                className={`rounded-xl p-4 text-center transition-colors ${
-                  isActive
-                    ? 'bg-white/20 text-white ring-2 ring-white/30'
-                    : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white'
-                }`}
-                aria-label={`${option.label} temperature`}
-                aria-pressed={isActive}
-              >
-                <span className="text-sm">{option.label}</span>
-              </motion.button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Wind Speed Unit */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <Wind className="h-4 w-4" />
-          Wind Speed
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          {windOptions.map((option) => {
-            const isActive = settings.windSpeedUnit === option.value;
-            return (
-              <motion.button
-                key={option.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setWindSpeedUnit(option.value)}
-                className={`rounded-xl p-4 text-center transition-colors ${
-                  isActive
-                    ? 'bg-white/20 text-white ring-2 ring-white/30'
-                    : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white'
-                }`}
-                aria-label={`${option.label} wind speed`}
-                aria-pressed={isActive}
-              >
-                <span className="text-sm">{option.label}</span>
-              </motion.button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Auto Location */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <MapPin className="h-4 w-4" />
-          Location
-        </h2>
-        <div className="rounded-xl bg-white/10 p-4 backdrop-blur-md">
-          <div className="flex items-center justify-between">
+        <div className="divide-y divide-glass-stroke overflow-hidden rounded-2xl glass-panel">
+          {/* Temperature */}
+          <div className="flex items-center justify-between p-6">
             <div>
-              <p className="text-sm font-medium text-white">Auto-detect location</p>
-              <p className="text-xs text-white/50">Use GPS to get weather for your current location</p>
+              <p className="font-label-md text-label-md text-on-surface">Temperature</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Choose your preferred temperature scale</p>
             </div>
-            <button
-              onClick={() => setAutoLocation(!settings.autoLocation)}
-              className={`relative h-6 w-11 rounded-full transition-colors ${
-                settings.autoLocation ? 'bg-blue-500' : 'bg-white/20'
-              }`}
-              role="switch"
-              aria-checked={settings.autoLocation}
-              aria-label="Toggle auto location"
+            <div className="flex rounded-lg border border-glass-stroke bg-glass-fill p-1">
+              {tempOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setTemperatureUnit(opt.value)}
+                  className={`rounded-md px-4 py-1.5 font-label-md text-label-md font-medium transition-all ${
+                    settings.temperatureUnit === opt.value ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Wind Speed */}
+          <div className="flex items-center justify-between p-6">
+            <div>
+              <p className="font-label-md text-label-md text-on-surface">Wind Speed</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Unit for wind velocity measurements</p>
+            </div>
+            <select
+              value={settings.windSpeedUnit}
+              onChange={(e) => setWindSpeedUnit(e.target.value as WindSpeedUnit)}
+              className="cursor-pointer appearance-none rounded-lg border border-glass-stroke bg-glass-fill px-4 py-2 font-label-md text-label-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+              style={{ colorScheme: 'dark' }}
             >
-              <motion.div
-                animate={{ x: settings.autoLocation ? 20 : 2 }}
-                className="absolute top-1 h-4 w-4 rounded-full bg-white"
-              />
-            </button>
+              {windOptions.map((opt) => (
+                <option key={opt.value} value={opt.value} className="bg-surface text-on-surface">{opt.label}</option>
+              ))}
+            </select>
+          </div>
+          {/* Pressure */}
+          <div className="flex items-center justify-between p-6">
+            <div>
+              <p className="font-label-md text-label-md text-on-surface">Atmospheric Pressure</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Barometric pressure reporting unit</p>
+            </div>
+            <div className="flex rounded-lg border border-glass-stroke bg-glass-fill p-1">
+              <button className="rounded-md px-4 py-1.5 font-label-md text-label-md font-medium text-on-surface-variant hover:text-on-surface">hPa</button>
+              <button className="rounded-md bg-primary px-4 py-1.5 font-label-md text-label-md font-medium text-on-primary">inHg</button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Refresh Interval */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <RefreshCw className="h-4 w-4" />
-          Auto-refresh
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {REFRESH_INTERVALS.map((interval) => {
-            const isActive = settings.refreshInterval === interval.value;
-            return (
-              <motion.button
-                key={interval.value}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setRefreshInterval(interval.value)}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
-                  isActive
-                    ? 'bg-white/20 text-white ring-2 ring-white/30'
-                    : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white'
-                }`}
-                aria-label={`Refresh every ${interval.label}`}
-                aria-pressed={isActive}
-              >
-                {interval.label}
-              </motion.button>
-            );
-          })}
+      {/* Section: Appearance */}
+      <section className="space-y-4">
+        <div className="mb-2 flex items-center gap-2">
+          <Palette className="h-6 w-6 text-primary" />
+          <h3 className="font-headline-md text-headline-md text-on-surface">Appearance & Behavior</h3>
+        </div>
+        <div className="divide-y divide-glass-stroke overflow-hidden rounded-2xl glass-panel">
+          {/* Theme */}
+          <div className="flex items-center justify-between p-6">
+            <div>
+              <p className="font-label-md text-label-md text-on-surface">Visual Theme</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Switch between light and dark glass styles</p>
+            </div>
+            <div className="flex gap-2">
+              {themeOptions.map((opt) => {
+                const Icon = opt.icon;
+                const isActive = settings.theme === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => setTheme(opt.value)}
+                    className={`rounded-lg border p-2.5 transition-colors ${
+                      isActive
+                        ? 'border-primary bg-primary-container text-on-primary'
+                        : 'border-glass-stroke bg-glass-fill text-on-surface-variant hover:text-primary'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          {/* Auto-Location */}
+          <div className="flex items-center justify-between p-6">
+            <div>
+              <p className="font-label-md text-label-md text-on-surface">Auto-Location Tracking</p>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">Update weather based on your current GPS position</p>
+            </div>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={settings.autoLocation}
+                onChange={() => setAutoLocation(!settings.autoLocation)}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
         </div>
       </section>
 
-      {/* Cache Duration */}
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-sm font-semibold text-white/60 uppercase tracking-wider">
-          <Database className="h-4 w-4" />
-          Cache Duration
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {CACHE_DURATIONS.map((duration) => {
-            const isActive = settings.cacheDuration === duration.value;
-            return (
-              <motion.button
-                key={duration.value}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setCacheDuration(duration.value)}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
-                  isActive
-                    ? 'bg-white/20 text-white ring-2 ring-white/30'
-                    : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white'
-                }`}
-                aria-label={`Cache for ${duration.label}`}
-                aria-pressed={isActive}
-              >
-                {duration.label}
-              </motion.button>
-            );
-          })}
+      {/* Section: Performance */}
+      <section className="space-y-4">
+        <div className="mb-2 flex items-center gap-2">
+          <Gauge className="h-6 w-6 text-primary" />
+          <h3 className="font-headline-md text-headline-md text-on-surface">Performance</h3>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="flex flex-col gap-4 rounded-2xl glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <RefreshCw className="h-5 w-5 text-on-surface-variant" />
+              <p className="font-label-md text-label-md text-on-surface">Refresh Interval</p>
+            </div>
+            <select
+              value={settings.refreshInterval}
+              onChange={(e) => setRefreshInterval(Number(e.target.value))}
+              className="w-full cursor-pointer appearance-none rounded-lg border border-glass-stroke bg-glass-fill px-4 py-3 font-label-md text-label-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+              style={{ colorScheme: 'dark' }}
+            >
+              {REFRESH_INTERVALS.map((interval) => (
+                <option key={interval.value} value={interval.value} className="bg-surface text-on-surface">Every {interval.label}</option>
+              ))}
+            </select>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Lower intervals may affect battery life on laptops.</p>
+          </div>
+          <div className="flex flex-col gap-4 rounded-2xl glass-panel p-6">
+            <div className="flex items-center gap-3">
+              <Database className="h-5 w-5 text-on-surface-variant" />
+              <p className="font-label-md text-label-md text-on-surface">Cache Duration</p>
+            </div>
+            <select
+              value={settings.cacheDuration}
+              onChange={(e) => setCacheDuration(Number(e.target.value))}
+              className="w-full cursor-pointer appearance-none rounded-lg border border-glass-stroke bg-glass-fill px-4 py-3 font-label-md text-label-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
+              style={{ colorScheme: 'dark' }}
+            >
+              {CACHE_DURATIONS.map((duration) => (
+                <option key={duration.value} value={duration.value} className="bg-surface text-on-surface">{duration.label}</option>
+              ))}
+            </select>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Stored data helps load dashboards instantly.</p>
+          </div>
         </div>
       </section>
-    </motion.div>
+
+      {/* Section: About */}
+      <section className="border-t border-glass-stroke pt-8">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="space-y-1">
+            <h4 className="font-label-md text-label-md text-on-surface">SkyGlass Desktop</h4>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">Version 2.4.1 (Stable Build)</p>
+            <p className="font-label-sm text-label-sm text-on-surface-variant">© 2026 SkyGlass Atmospheric Sciences Corp.</p>
+          </div>
+          <div className="flex gap-3">
+            <button className="rounded-xl border border-glass-stroke px-6 py-2.5 font-label-md text-label-md text-on-surface transition-all hover:bg-glass-fill">View Changelog</button>
+            <button className="rounded-xl border border-glass-stroke bg-glass-fill px-6 py-2.5 font-label-md text-label-md text-on-surface transition-all hover:text-primary">Support</button>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

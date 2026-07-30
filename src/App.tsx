@@ -9,6 +9,8 @@ import { WeatherSkeleton } from '@/components/ui/Skeleton';
 
 const HomePage = lazy(() => import('@/pages/HomePage').then((m) => ({ default: m.HomePage })));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage').then((m) => ({ default: m.SettingsPage })));
+const AirQualityPage = lazy(() => import('@/pages/AirQualityPage').then((m) => ({ default: m.AirQualityPage })));
+const SearchPage = lazy(() => import('@/pages/SearchPage').then((m) => ({ default: m.SearchPage })));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,9 +31,24 @@ function AppContent() {
     loadSettings();
   }, [loadSettings]);
 
+  useEffect(() => {
+    // Add mouse-follow glass effect
+    const handleMouseMove = (e: MouseEvent) => {
+      document.querySelectorAll('.glass-panel').forEach((panel) => {
+        const rect = panel.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        (panel as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
+        (panel as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-slate-900">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="w-full max-w-lg p-4">
           <WeatherSkeleton />
         </div>
@@ -40,6 +57,8 @@ function AppContent() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/air-quality" element={<AirQualityPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>

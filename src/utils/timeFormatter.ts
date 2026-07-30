@@ -39,8 +39,8 @@ export function formatDate(dateString: string): string {
   });
 }
 
-export function isNightTime(sunrise: string, sunset: string): boolean {
-  const now = new Date();
+export function isNightTime(sunrise: string, sunset: string, checkTime?: string): boolean {
+  const now = checkTime ? new Date(checkTime) : new Date();
   const sunriseTime = new Date(sunrise);
   const sunsetTime = new Date(sunset);
   return now < sunriseTime || now > sunsetTime;

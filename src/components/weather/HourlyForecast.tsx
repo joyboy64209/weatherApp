@@ -15,7 +15,6 @@ interface HourlyForecastProps {
 export function HourlyForecast({ data, sunrise, sunset }: HourlyForecastProps) {
   const tempUnit = useSettingsStore((s) => s.settings.temperatureUnit);
 
-  // Get next 24 hours from current time
   const now = new Date();
   const currentHour = now.getHours();
   const startIndex = data.time.findIndex((t) => {
@@ -35,37 +34,38 @@ export function HourlyForecast({ data, sunrise, sunset }: HourlyForecastProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="space-y-3"
     >
-      <h2 className="text-lg font-semibold text-white">Hourly Forecast</h2>
-      <div
-        className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/20"
-        role="list"
-        aria-label="Hourly weather forecast"
-      >
+      <div className="mb-6 flex items-center justify-between">
+        <h4 className="font-headline-md text-headline-md text-on-surface">Hourly Forecast</h4>
+        <div className="flex gap-2">
+          <button className="rounded-full bg-primary px-4 py-1.5 font-label-md text-label-md text-on-primary">Next 24h</button>
+          <button className="rounded-full bg-glass-fill px-4 py-1.5 font-label-md text-label-md text-on-surface-variant transition-colors hover:bg-glass-stroke">Next 48h</button>
+        </div>
+      </div>
+      <div className="custom-scrollbar flex gap-8 overflow-x-auto pb-4">
         {hours.map((hour, index) => (
           <motion.div
             key={hour.time}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * index }}
-            className="flex min-w-[80px] flex-col items-center gap-2 rounded-xl bg-white/10 p-3 backdrop-blur-md"
-            role="listitem"
+            className="group flex min-w-[64px] shrink-0 flex-col items-center gap-3"
           >
-            <span className="text-xs text-white/60">
+            <span className="font-label-md text-label-md text-on-surface-variant">
               {index === 0 ? 'Now' : formatHour(hour.time)}
             </span>
             <WeatherIcon
               weatherCode={hour.code}
-              size={24}
-              className="text-white"
+              size={28}
+              className="text-primary"
               sunrise={sunrise}
               sunset={sunset}
+              time={hour.time}
             />
-            <span className="text-sm font-semibold text-white">
+            <span className="font-body-lg text-body-lg font-bold text-on-surface">
               {formatTemperatureShort(hour.temp, tempUnit)}
             </span>
-            <div className="flex items-center gap-1 text-xs text-blue-300">
+            <div className="flex items-center gap-1 text-xs text-primary/60">
               <Droplets className="h-3 w-3" />
               <span>{hour.precip}%</span>
             </div>
