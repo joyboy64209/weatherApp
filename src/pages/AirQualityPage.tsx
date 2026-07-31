@@ -2,9 +2,10 @@ import { useSearchParams } from 'react-router-dom';
 import { useAirQuality } from '@/hooks/useWeather';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useSettingsStore } from '@/store/settingsStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Home, Users, Map, ArrowUpRight } from 'lucide-react';
+import { AQIMapModal } from '@/components/maps/AQIMapModal';
 
 export function AirQualityPage() {
   const [searchParams] = useSearchParams();
@@ -17,6 +18,7 @@ export function AirQualityPage() {
   const longitude = lonParam ? parseFloat(lonParam) : geolocation.longitude;
 
   const { data: airQuality, isLoading } = useAirQuality(latitude, longitude);
+  const [mapOpen, setMapOpen] = useState(false);
 
   useEffect(() => {
     if (autoLocation && !latParam) geolocation.requestLocation();
@@ -151,28 +153,28 @@ export function AirQualityPage() {
 
         {/* Pollutant Cards */}
         <div className="col-span-12 grid grid-cols-1 gap-card-gap sm:grid-cols-2 lg:grid-cols-3">
-        {pollutants.map((p, i) => (
-          <motion.div
-            key={p.key}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="rounded-3xl glass-panel p-6 transition-colors hover:bg-white/10"
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <span className="font-label-md text-label-md text-on-surface-variant">{p.label}</span>
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color, boxShadow: `0 0 8px ${p.color}99` }}></div>
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="font-headline-md text-headline-md text-on-surface">{p.value.toFixed(1)}</span>
-              <span className="font-label-sm text-label-sm text-on-surface-variant">{p.unit}</span>
-            </div>
-            <p className="mt-2 font-label-sm text-label-sm" style={{ color: p.color }}>{p.level}</p>
-            <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-container-highest">
-              <div className="h-full rounded-full" style={{ width: `${p.pct}%`, backgroundColor: p.color }}></div>
-            </div>
-          </motion.div>
-        ))}
+          {pollutants.map((p, i) => (
+            <motion.div
+              key={p.key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="rounded-3xl glass-panel p-6 transition-colors hover:bg-white/10"
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <span className="font-label-md text-label-md text-on-surface-variant">{p.label}</span>
+                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color, boxShadow: `0 0 8px ${p.color}99` }}></div>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="font-headline-md text-headline-md text-on-surface">{p.value.toFixed(1)}</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant">{p.unit}</span>
+              </div>
+              <p className="mt-2 font-label-sm text-label-sm" style={{ color: p.color }}>{p.level}</p>
+              <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-container-highest">
+                <div className="h-full rounded-full" style={{ width: `${p.pct}%`, backgroundColor: p.color }}></div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Map */}
@@ -185,7 +187,10 @@ export function AirQualityPage() {
                   <span className="font-label-sm text-label-sm uppercase tracking-widest text-primary">Interactive Map</span>
                 </div>
                 <h3 className="font-headline-md text-headline-md mb-4 text-on-surface">Local Pollutant Dispersion</h3>
-                <button className="glass-card inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3 font-label-md text-label-md backdrop-blur-md transition-all hover:bg-white/20">
+                <button
+                  onClick={() => setMapOpen(true)}
+                  className="glass-card inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3 font-label-md text-label-md backdrop-blur-md transition-all hover:bg-white/20"
+                >
                   Open Interactive View
                   <ArrowUpRight className="h-4 w-4" />
                 </button>
@@ -194,6 +199,15 @@ export function AirQualityPage() {
           </div>
         </div>
       </div>
+
+      {/* AQI Map Modal */}
+      <AQIMapModal
+        isOpen={mapOpen}
+        onClose={() => setMapOpen(false)}
+        latitude={latitude ?? 0}
+        longitude={longitude ?? 0}
+        cityName={searchParams.get('city') || 'Current Location'}
+      />
     </div>
   );
 }

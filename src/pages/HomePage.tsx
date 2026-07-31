@@ -8,6 +8,7 @@ import { HourlyForecast } from '@/components/weather/HourlyForecast';
 import { AirQuality } from '@/components/weather/AirQuality';
 import { WeatherSkeleton } from '@/components/ui/Skeleton';
 import { ErrorDisplay } from '@/components/ui/ErrorDisplay';
+import { RadarMapModal } from '@/components/maps/RadarMapModal';
 import { getWeatherCodeInfo } from '@/constants/weatherCodes';
 import { getOfflineWeather } from '@/services/cacheService';
 import { WeatherData } from '@/types/weather';
@@ -29,6 +30,7 @@ export function HomePage() {
   const { data: weatherData, isLoading, isError, error, refetch } = useWeatherData(latitude, longitude);
   const { data: airQualityData } = useAirQuality(latitude, longitude);
   const [offlineData, setOfflineData] = useState<WeatherData | null>(null);
+  const [radarOpen, setRadarOpen] = useState(false);
 
   useEffect(() => { loadSearchStore(); }, [loadSearchStore]);
   useEffect(() => { if (autoLocation && !latParam) geolocation.requestLocation(); }, [autoLocation, latParam, geolocation]);
@@ -230,7 +232,10 @@ export function HomePage() {
                 <Compass className="mx-auto mb-4 h-12 w-12 text-primary/40" />
                 <h4 className="font-headline-md text-headline-md mb-2 text-on-surface">Interactive Radar</h4>
                 <p className="font-body-md text-body-md mb-4 text-on-surface-variant">View real-time precipitation and storm tracking in your area.</p>
-                <button className="glass-card inline-flex items-center gap-2 rounded-full px-6 py-3 font-label-md text-label-md font-bold transition-all hover:bg-primary hover:text-on-primary">
+                <button
+                  onClick={() => setRadarOpen(true)}
+                  className="glass-card inline-flex items-center gap-2 rounded-full px-6 py-3 font-label-md text-label-md font-bold transition-all hover:bg-primary hover:text-on-primary"
+                >
                   Open Radar Map
                 </button>
               </div>
@@ -251,6 +256,15 @@ export function HomePage() {
           Data provided by Open-Meteo • Updated {new Date().toLocaleTimeString()}
         </p>
       </footer>
+
+      {/* Radar Map Modal */}
+      <RadarMapModal
+        isOpen={radarOpen}
+        onClose={() => setRadarOpen(false)}
+        latitude={displayData.latitude}
+        longitude={displayData.longitude}
+        cityName={displayData.cityName}
+      />
     </div>
   );
 }
